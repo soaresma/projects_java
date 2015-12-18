@@ -13,7 +13,16 @@
 *	2) Cuidado para ambiguidade de membros static na classe. Por exemplo, a classe java.lang.Integer e java.util.Long, ambas possuem o campo MAX_VALUE.
 *	Caso não especifique de qual classe esteja importando, a JVM em tempo de execução não irá advinhar para você, gerando um erro em tempo de execução.
 *
-*	3) 
+*	3) Você pode fazer um import static na referência static do objeto, constantes (lembrando que elas são static e final) e métodos static.
+*
+*	É possivel também fazer um import static implicitamente. Por exemplo, quando declaramos o seguinte comando System.out.println(), estamos invocando no objeto
+*	System a propriedade PrintStream out para exibir uma mensagem na console.
+*
+*	Erros comuns:
+*
+*	1) fazer o import de um membro static declarando static import.
+*
+*	2) fazendo uma importação de um membro static declarando import static java.lang.Integer sem utilizar o wildcard *
 *
 */
 
