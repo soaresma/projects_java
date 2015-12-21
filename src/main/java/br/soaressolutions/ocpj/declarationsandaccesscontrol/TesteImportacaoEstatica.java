@@ -36,11 +36,18 @@ class TesteImportacaoEstatica {
 	
 	public static void main(String[] args) {
 		
+		//Invocando a propriedade PI da classe Math
 		System.out.println("PI = " + PI);
+		//Convertendo um número binário em um objeto String utilizando o método estático valueOf()
 		System.out.println("0b01001100_0100 = " + valueOf(0b01001100_0100));
+		//Invocando um método estático nanoTime() implicitamente da classe System
+		//pois a mesma não precisa ser importada pois o pacote java.lang faz parte
+		//do pacote fundamental da linguagem
 		System.out.println(System.nanoTime());
+		//Invocando as constantes da classe Pessoa.
 		System.out.println("Altura = " + WEIGHT);
 		System.out.println("Peso = " + HEIGTH);
+		
 		
 	
 	}

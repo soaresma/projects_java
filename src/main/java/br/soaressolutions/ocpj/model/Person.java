@@ -2,7 +2,7 @@ package br.soaressolutions.ocpj.model;
 
 public class Person {
 
-	public static final double WEIGHT = 100;
+	public static final double WEIGHT = 100d;
 	public static final double HEIGTH = 1.90d;
 	
 	protected String name;
