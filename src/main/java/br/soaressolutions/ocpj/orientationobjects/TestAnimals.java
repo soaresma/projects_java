@@ -21,6 +21,8 @@ public class TestAnimals {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		b.print("Marcelo");
 		 
 		//Here ocurred error. The Animal superclass don't declared buck() method, therefore, a error
 		//compilation is show in console.

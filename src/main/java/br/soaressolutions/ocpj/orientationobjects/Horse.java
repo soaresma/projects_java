@@ -25,5 +25,10 @@ class Horse extends Animal {
 	public void buck() {
 		System.out.println("Calling the buck() method in a Horse instance");
 	}
+	
+	public void print(String txt) {
+		System.out.println(txt + " in Horse");
+		super.print(txt);
+	}
 
 }
