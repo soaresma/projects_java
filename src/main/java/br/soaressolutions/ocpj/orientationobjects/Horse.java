@@ -1,5 +1,7 @@
 package br.soaressolutions.ocpj.orientationobjects;
 
+//import java.sql.SQLException;
+
 class Horse extends Animal {
 
 	//Version method overriden to a Animal superclass.
@@ -16,7 +18,7 @@ class Horse extends Animal {
 		attempting to assign weaker access privileges; was public
 		1 error
 	**/
-	private void eat() {
+	public void eat() throws Exception {
 		System.out.println("Horse eating hay, oats, " + "and horse treats");
 	}
 	
