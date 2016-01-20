@@ -1,5 +1,7 @@
 package br.soaressolutions.ocpj.orientationobjects;
 
+//import java.io.IOException; Uncomment here to see error, and change type 
+//checked exception declare on catch on line 16 and 29
 //An interface, can extends one or more interfaces
 public class TestBall {
 	
@@ -9,7 +11,12 @@ public class TestBall {
 		ball.bounce();
 		ball.setBounceFactor(12);
 		ball.moveIt();
-		ball.doSphericalThing();
+		try {
+			ball.doSphericalThing();	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 		//Test CAST object's
 		//You can use a reference variable type of interface to instance of class that
@@ -17,7 +24,12 @@ public class TestBall {
 		//the version overriden in implementation class.
 		System.out.println("------------ Test CAST ---------------");
 		Spherical sph = ball;
-		sph.doSphericalThing();
+		try {
+			sph.doSphericalThing();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 		Bounceable bounce = new Ball();
 		bounce.bounce();

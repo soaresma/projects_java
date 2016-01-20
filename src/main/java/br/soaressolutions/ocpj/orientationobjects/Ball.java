@@ -1,5 +1,6 @@
 package br.soaressolutions.ocpj.orientationobjects;
 
+//import java.io.Exception;
 //An interface, can extends one or more interfaces
 public class Ball implements Bounceable {
 	
@@ -15,9 +16,15 @@ public class Ball implements Bounceable {
 		System.out.println("Invoke method Moveable interface's");
 	}
 	
-	public void  doSphericalThing() {
+	public void  doSphericalThing() throws Exception {
 		System.out.println("Invoke method Spherical interface's");
 	}
+	//ERROR. An interface don't can declare checked exception other than
+	//those declared by interface method, or subclasses of those declared
+	//by the interface method
+	// public void  doSphericalThing() throws IOException {
+		// System.out.println("Invoke method Spherical interface's");
+	// }
 	
 	
 	
