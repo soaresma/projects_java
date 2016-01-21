@@ -4,6 +4,10 @@ public class Frog {
 	
 	static int frogCount = 0;
 	
+	//Instance variable don't can call in Constructor
+	//occurs compilation error.
+	//int frogCount = 0;
+	
 	Frog() {
 		//One Constructor can just access only members static
 		//of class, why you access methods or variable instance
