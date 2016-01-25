@@ -1,0 +1,27 @@
+- Compact Profiles
+* Cada JVM necessita de subir as suas  classes básicas da API para a memória. Se em um computador tem mais de uma JVM, essas classes básicas não são duplicadas na memória, as JVMs usam um mesmo espaço de memória para armazenar as classes básicas, de modo que cada JVM apenas carregará na memória o que a cada aplicação precisará. No java8 foram incluídos perfis compactos (compact profiles) onde cada profile só sobe com classes específicas e é atribuído a cada JVM e  para economizer memória.
+
+- Annotations
+* É possível utilizar a mesma annotation no mesmo campo para evitar annotations dentro de uma  annotation
+* Também é possúivel utilizar annotations em variáveis dentro de métodos
+
+- Java FX
+* Interface para construção de sistemas mais responsivos do que o swing. Roda no browser, funciona com webSockets, etc.
+
+- Security 
+* O java 8 é mais seguro do que o java 7
+
+- Concurrency
+* Existem muitos recursos novos de concorrência no java 8.
+
+- Interface
+* Na interface do java 8 é possível criar uma implementação "default"
+
+* Lambda
+- Para a lambda funcionar, é necessário implementar uma interface com um único método de utilização genérica (são as chamadas interfaces funcionais). 
+
+* Interface Funcional
+- São interfaces que possuem apenas um único método abstrato.
+
+* java.util.funcion.Predicate
+- É uma maneira de 

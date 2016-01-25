@@ -1,0 +1,337 @@
+- Tópicos avançados
+   * Classes aninhadas
+      * é possível criar classes privadas e protegidas apenas para classes internas
+      * classes internas podem ser staticas
+      * para instanciar classes internas staticas deve ser feito o seguinte código:
+      * Outer1.StaticInner1 staticInner = new Outer1.StaticInner1();
+      * para instanciar classes internas NÃO estaticas deve ser feito o seguinte código:
+         * Outer1.NonStaticInner1 nonStaticInner = new Outer1().new NonStaticInner1(); // ou
+         * Outer1 outer = new Outer1();
+         * Outer1.NonStaticInner1 nonStaticInner = outer.new NonStaticInner1();
+   * Classes anônimas
+      * É possível criar classes de maneira não declarativa essas são chamadas  de classes anônimas. Ex.:
+
+         public interface Interface1 { void metodoX(); }
+         
+         public abstract class ClasseAbstrata1 { public abstract void metodoY(); }
+         
+         public class X {
+             public static void main(String args) {
+             
+                  Interface1 i1 = new Interface1() {
+                          @Override
+                          public void metodoX() {
+                             System.out.println("TESTE 1");
+                         }
+                     };
+                  
+                   i1.metodoX(); // imprimirá "TESTE 1"
+                  
+
+                  ClasseAbstrata1 ca1 = new ClasseAbstrata1() {
+                          @Override
+                          public void metodoY() {
+                             System.out.println("TESTE 2");
+                         }
+                     };
+                  
+                   ca1.metodoX(); // imprimirá "TESTE 2"
+ 
+             }
+         }
+
+
+- Swing
+* JFrame
+   * Criar janelas simples
+      1. Extender ou instanciar um javax.swing.JFrame;
+      2. setar as configurações (dar um setVisible(true) por último, senão usuário verá a
+   tela carregando)
+   * Para adicionar componentes visuais basta chamar o método add() passando o componente que será adicionado. Ex.: jframe.add(new JLabel("Texto do lebel")
+   * Fechando janelas
+      * O método jframe.setDefaultCloseOperation(int) pode ser passado 3 parâmetros:
+         * JFrame.HIDE_ON_CLOSE - Oculta a janela, mas a mantém em memória (comportamento padrão)
+         * JFrame.EXIT_ON_CLOSE - Mata o processo do sistema operacional
+         * JFrame.DISPOSE_ON_CLOSE - Fecha a janela tirando-a da memória, mas não mata o processo da aplicação
+         * JFrame.DO_NOTHING_ON_CLOSE - não faz nada quando clica no botão fechar
+     * apenas é possível colocar um componente dentro do JFrame, se quiser colocar mais de um é necessário instanciar um JPanel que suporte mais de um componente por vez e adicionar esse JPanel no JFrame
+     * para alterar propriedades de cor de fundo, texto, etc no JFrame deve ser utilizao do método jframe.getContentPanel()
+
+* JButton
+   * possui 2 construtores: Passando  um texto ou um Icon
+   * setMnemonic(int mnemonic) - é utilizado para criar atalho com base nas constantes da classe KeyEvent
+
+* JTextComponent
+  * Componente de caixa de texto, pode ser um JTextField ou um JTextArea
+  * para ajustar o tamanho do JTextField é o setColumns(int)
+
+* JComboBox
+  * é uma classe que renderiza um comboBox, ele utiliza toString(), equals() e hashcode()
+
+* JList
+  * para adicionar elementos na lista sem ser no construtor é necessário criar um DefaultListModel, adicionar os elementos no DefaultListModel com o método addElement() e adicionar o DefaultListModel no JList
+
+* Gerenciadores de Layout
+   * São configurados nos JPanel, JDialog e JFrame, possuem as seguintes configurações
+      * java.awt.FlowLayout - Adiciona os componentes da esquerda para a direita e de cima para baixo
+      * java.awt.BorderLayout - separa a tela em norte, sul, leste, oeste e centro
+      * java.awt.GridLayout - Muito parecido com o FlowLayout, mas são configuráveis as formas de linhas e colunas
+
+  * Eventos
+      * passos para criar eventos:
+         1. criar o componente
+         2. criar um objeto que implementa algum Listener
+         3. Associar objeto Listener ao componente
+
+
+
+- I/O
+* A partir do java 4 existe o NIO e do java 1.7 existe o NIO2 - Essas APIs provêem maior performance, pois transfere dados direto do barramento do SO para o destino, não armazena em memória
+* A API NIO2 do java 7 permite gravar e ler dados de maneira assíncrona
+
+- I/O - Stream
+* É possível gerar Stream (array de bytes) a partir dos objetos
+* Stream é um canal de comunicação entre uma orígem (source) e um destino (sinc)
+* No java existem 2 Streams: Streams de bytes e Streams de caracteres
+
+- java.io.InputStream
+   * int available() throws IOException - retorna o número de bytes que estão disponíveis para serem lidos naquele momento, pois em uma transferência a informação chega aos poucos
+   * abstract int read() throws IOException - lê ou recebe o próximo byte que não foi lido (o retorno de -1 é o final da leitura)
+   * int read(byte[] b) throws IOException - lê ou recebe um conjunto de bytes de uma vez, é mais performatico do que o read()... nesse caso o retorno se torna o tamanho do que foi lido (o retorno de -1 é o final da leitura)
+   * int read(byte[] b, int p, int n) throws IOException - lê ou recebe um conjunto de "n" bytes de uma vez a partir da posição "p"
+      * Para ler e manter o que está lido no buffer é mais fácil utilizar o int read(byte[] b, int pos, int n). Ex.:
+          try {
+              int size = 0;
+             int pos = 0;
+            byte[] bufer = new byte[20]
+            while ((size = in.read(bufer, pos, bufer.lenth-pos) ) != -1) {
+                 pos+=size;
+            }
+        } catch(IOException e) {
+           e.printStackTrace();
+        } finally {
+             try{
+                  in.close();
+             } catch(IOException e2) {
+                  e2.printStackTrace();
+             }
+        }
+   * void mark(int marcacao) throws IOException - faz uma marcação para posteriormente voltar à marcação com o método reset()
+   * void reset() throws IOException - volta a leitura na última marcacao passada no método mark(int)
+   * long skip(long n) throws IOException - ignora os "n" bytes lidos
+   * boolean markSupported() throws IOException informa se é possível utilizor o mark e o skip
+   * void close() throws IOException - fecha o canal de comunicação stream
+
+   * Classes que herdam de InputStream:
+      * FileInputStream
+      * DataInputStream - leitura de dados primitivos byte, short, char, int, long, float, double, etc.
+      * BufferedInputStream
+      * ObjectInputStream - leitura de objeto java.
+
+* Saída: java.io.OutputStream
+   * abstract void write(int i) throws IOException
+   * void write(byte[] b) throws IOException
+   * void write(byte[] b, int pos, int n) throws IOException
+   * void close() throws IOException
+   * void flush() throws IOException
+    
+
+   * Classes que herdam de OutputStream:
+      * FileOutputStream
+      * DataOutputStream - leitura de dados primitivos byte, short, char, int, long, float, double, etc.
+      * BufferedOutputStream - otimizada a utilização 
+      * ObjectOutputStream - leitura de objeto java.
+      * PrintStream - com a habilidade de imprimir texto
+
+- Serialização de objetos
+* Objetos que serão serializados devem implementar a interface java.io.Serializable
+* Para gravar um objeto é necessário instanciar um ObjectOutputStream. Apenas é possível instanciar um objeto ObjectOutputStream passando um OutputStream válido.
+* Para ler é necessário instanciar um ObjectInputStream. Apenas é 
+possível instanciar um ObjectInputStream passando um InputStream 
+válido.
+ * Exemplo de leitura e gravação do arquivo:
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+
+
+
+import java.io.IOException;
+
+
+public class SerializaObjeto {
+	
+	public static void main(String... args) {
+		
+		try {
+			
+			FileOutputStream fileOutputStream = new FileOutputStream("cliente.object");
+			
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+			
+			objectOutputStream.writeObject(new Cliente(17, "José"));
+			
+			objectOutputStream.close();
+			
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+		
+		Cliente cliente = null;
+		
+		try {
+			FileInputStream fileInputStream = new FileInputStream("cliente.object");
+			
+			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+			
+			cliente = (Cliente)objectInputStream.readObject();
+			
+			objectInputStream.close();
+			
+		} catch(IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("cliente.getId(): " + cliente.getId());
+		System.out.println("cliente.getNome(): " + cliente.getNome());
+		
+	}
+	
+}
+
+* O java IO utiliza a constante long "serialVersionUID" nas classes que implementam Serializable para validar o tipo na hora da desserialização
+* o que não é persistido deve ser marcado como "transient"
+
+- java.io.Writter
+* void write(int caractere) throws IOException
+* void write(char[] c) throws IOException
+* void write(String s) throws IOException
+* void write(char[] c, int p, len) throws IOException
+* void write(String c, int p, len) throws IOException
+* abstract void close() throws IOException
+* abstract void flush() throws IOException
+
+- java.io.Reader
+* boolean ready() throws IOException
+* int read() throws IOException
+* int read(char[] c) throws IOException
+* int read(char[] c, int p, len) throws IOException
+* void mark(int p) throws IOException
+* void reset() throws IOException
+* long skip(int p) throws IOException
+* boolean markSupported() throws IOException
+* abstract void close() throws IOException
+
+- java.util.Scanner
+* Scanner(InputStream in)
+* Scanner(File arquivo)
+* Scanner(String texto)
+* boolean hasNext()
+* boolean hasNextInt()
+* boolean hasNextFloat()
+* boolean hasNextLine()
+* String next()
+* int nextInt()
+* float nextFloat()
+* String nextLine()
+* void close()
+* Scanner useDelimiter(String padrao) - por padrão é o caractere espaço
+
+- java.io.Console
+* Console printf(String message, Object... args)
+* String readLine()
+* String readLine(String mensagem, Object... args)
+* char[] readPassword()
+* char[] readLine(String mensagem, Object... args)
+
+
+
+
+- NIO2 (estudar)
+* java.nio.file.Path - Caminho de um arquio ou de uma pasta
+   * Path getFileName()
+   * Path getParent()
+   * Path toAbsolutePath()
+   * 
+* java.nio.file.Paths - Classe utilitária com métodos
+* java.nio.file.Files
+   * Files.newDirectoryStream(Path, String filtro) - lê arquivos filtrandô-os com regex
+* FileVisitor<?> - interface que deve ser estendida quando se quer percorrer sobre alguma estrutura hierárquica de arquivos
+* java.nio.file.PathMatcher - é um filtro padrão para arquivos, pode se passar glob ou regex
+
+
+
+
+- Thread
+* A JVM só encerra quando todas as threads (não daemon) chegam ao fim
+
+* java.lang.Runnable
+   * public void run()
+
+* java.lang.Thread
+   * Toda thread somente pode ser executada uma única vez, se o método run() for chamado mais de uma vez para a mesma thread dará erro em tempo de execução
+   * Não há garantia de ordenação de execução nas threads
+
+   * Thread()
+   * Thread(Runnable target)
+   * Thread(String nome)
+   * Thread(Runnable target, String nome)
+
+   * void run()
+   * void start() - informa a JVM que a thread pode ser executada (esse método só pode ser chamado uma única vez)
+   * static void sleep(long ms) - faz a thread não ser executada por alguns milissegundos
+   * static Thread currentThread()
+   * static void yeld() - interrompe a thread atual momentaneamente, dá oportunidade de outras threads executarem. É o mesmo que o Thread.sleep(0) e é excelente para ser usado em uma thread de longa execução, pois da chance a outras threads executarem ou essa thread ser usada em outros cpus
+   * boolean isInterrupted()
+   * void interrupt()
+   * void setPriority(int priority) - normalmente vai de 1 até 10
+   * int getPriority()
+   * void setName(String name)
+   * String getName()
+   * boolean isDaemon()
+   * void setDaemon(boolean daemon) - threads que morrem junto com a JVM
+   * void join() - espera o método run() ser executado travando as demais threads
+   * void join(int timeout)
+   * Thread.State getState()
+
+* Estados de uma Thread:
+   *  [new] - quando a thread é instanciada
+   *  [ready] ou [runable] - quando é chamado o método start()
+   *  [running] - quando a jvm chama o método run(), quando é chamado o método start() a jvm pode chamar  o  método run() quando ela achar melhor
+   *  [waiting] - quando o programador coloca o método wait() dentro do método run() da thread e a jvm executa essa instrução, ela põe a thread em [waiting]. Depois desse estado a jvm coloca a thread para o estado [ready]
+   *  [timed wait] - quando o programador coloca o método sleep(long) ou wait(long) dentro do método run() da thread e a jvm executa essa instrução,  ela põe a thread em [waiting]. Depois desse estado a jvm coloca a thread para o estado [ready]
+   *  [terminated] - quando a jvm termina de executar o método run() de uma thread
+   *  [blocked] - quando uma thread X tenta executar um código dentro de um bloco syinchronized que já está sendo executado por outra thread Y, essa thread X entra em blocked até que a thread Y termine de executar as instruções do bloco synchronized
+
+*  Sincronia de threads
+   *  Tomar cuidado funções "Left to Right" e "Right to Left". O operador "+" é "Left to Right" e o operador "=" é "Right to Left".Ex.: 
+       *  10+4+"x" é igual á "14x", pois primeiro é executado 10+4 e depois é executado 14+"x"
+       *  "x" + 10 + 4 é igual á "x104", pois primeiro é executado "x"+10 e depois é executado "x10"+4
+       *  String b = 10 + "x", "b" é igual a "10x", pois primeiro é executado 10+"x" e depois é atribuído "10x" para b
+       *  O synchronized(obj) sempre recebe uma referência de um objeto, pois cada vez que executar o bloco syinchronized  será locado o objeto de referência, de modo que, se 2 métodos forem sincronizados com o mesmo objeto, estamos falando que apenas um pode ser executado por vez
+       * Toda instância de Object possui os métodos notify(), notifyAll() e wait() e eles servem para fazer com que as threads se comuniquem através do objeto (obj) que estão dentro do syinchronized(obj). Quando a thread X executa um bloco synchronized(obj) e chama o obj.wait(), ela libera a flag para uma outra thread Y executar o código dentro de um outro bloco synchronized(obj)... Nesse momento a thread X entra em estado [waiting]... Quando a thread Y chama o  método obj.notify() ou obj.notifyAll() ele tira a thread X de [waitig] e a coloca no estado [blocked], contudo somente depois que é executado todo o bloco synchronized(obj) da thread Y é que a thread X passará para [ready] (ou [runable]) para depois a jvm passar a thread X para o estado [running] e terminar de executar o bloco syinchronized(obj) da thread X a partir da linha obj.wait().
+ 
+
+
+* Estudar java.util.concurrent.ReentrantLock
+
+
+
+* @Annotation
+  * @Target(ElementType): Informa onde essa anotação pode ser usada.
+     * ElementType.FIELD
+     * ElementType.CONSTRUCTOR
+     * ElementType.LOCAL_VARIABLES
+     * ElementType.METHOD
+     * ElementType.PACKAGE
+     * ElementType.PARAMETER
+     * ElementType.TYPE
+  * @Retention(RetentionPolicy): Informa quando essa anotação pode ser enxergada
+     * RetentionPolicy.SOURCE
+     * RetentionPolicy.CLASS
+     * RetentionPolicy.RUNTIME
+

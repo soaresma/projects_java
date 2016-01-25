@@ -1,0 +1,308 @@
+- Introdução
+Java é uma linguagem compilada e interpretada:
+* Compilada para gerar o byte-code;
+* O byte-code é interpretado para código-fonte pela JVM;
+* O byte-code é também compilado, recompilado e interpretado pela JVM.
+* Na compilação geralmente são pegos erros de sintaxe, chamadas de métodos ou de variáveis inválidas, etc. Ou seja, erros que não permitem a execução do código. Erros lógicos geralmente não são pegos na compilação, apenas na execução. 
+
+- Identificadores
+* podem começar com letras maiúsculas ou minúsculas, com o caractere "_"  ou com o caractere "$". Números não podem ser o primeiro caractere de identificadores, mas podem estar presentes do segundo caractere em diante. 
+* além de comandos como as palavras transient e volatile, as palavras const, goto também não podem ser utilizadas como identificadores. 
+
+- Variáveis
+* As variáveis locais devem ser inicializadas antes do primeiro uso, senão gera erro de compilação
+* As variáveis locais só podem ser utilizadas dentro dos do bloco, senão gera erro de compilação
+
+- Operadores
+* Conversões automáticas acontecem quando são atribuídos valores
+constantes (ex.: byte b = 120, byte b = CONSTANTE_INT, short s = 'a', 
+byte a = 'a' ou byte b = CONSTANTE_CHAR) para uma variável dos tipos 
+byte, short, char e int. (Desde que o valor esteja no range que cabe na 
+variável declarada, senão gera erro de compilação)
+* O cast é feito antes da operação matemática sempre
+* O operador >> desloca os bits para a direita de um número preenchendo-o com zeros se esse número for positivo ou com uns (1) se esse número for negativo.
+* Os operadores &, | e ^ podem ser utilizados entre números em operações bit a bit (ex.: 1 & 1), contudo os operadores && e || apenas podem ser utilizados entre booleanos (ex.: 23  == 23 && 32 == 32) 
+
+- Cast 
+* Promoção automática, neste caso o cast não precisa ser feito. Essa situação também é chamada de Cast implícito:
+   * byte->short->int->long->float->double
+   * char->int->long->float->double
+* Cast explícito, nesse caso o cast deve ser feito explicitamente:
+   * double->float->long->int->short->byte
+   * double->float->long->int->char
+* Cast explícito de tipos primitivos nunca da erro
+
+
+- Controle de Fluxo
+* A variável a ser avaliada na função switch deve ser:
+   * Um tipo integral (byte, short, char, int)
+   * enum
+   * String (a partir do java 7)
+*  StackOverFlowException é disparado quando ocorrem muitas chamadas de métodos recursivas
+* O método while compila se o código for:
+   * while(variavelTrue); {  variavelTrue = false;  } // só que  por causa do ";" entrará em looping infinito
+* A função do-while pode ser utilizada sem os parênteses
+* Qualquer um dos elementos da função "for" é opcional (ex.: for(;;){ })
+* Na função "for" os incrementos podem ser feitas e separadas por "," ex.:
+   * for(int i = 0, j = 10; i < 10 && j> 0; i++, j--) { }
+   * É possível rotular laços de repetição. Ex.: 
+      meuRotulo:for(int i=0;i<100;i++) {
+             for(int j=0;j<100;j++) {
+                 break meuRotulo;
+             }
+      }
+
+- Enhanced For
+* É possível fazer o forEach de qualquer classe que implemente Iterable. Ex.:
+   public class Teste implements Iterable<Teste> {
+      // implementações dos métodos da interface
+   }
+
+  Teste testeList = new Teste();
+  for(Teste teste : testeList) {
+  }
+
+- Arrays
+* A sintaxe de inicializar um array utilizando valores (ex.: {1, 6, 46}) só pode ser feita na  declaração da variável, senão não compila.
+* A declaração de um array aloca espaço no HeapMemory junto com os objetos
+* Se for mandar um array que não seja do tipo char, aparecerá o enderêço de memória, arrays do tipo char imprimem o valor
+* É possível declarar arrays multidimensionais dessa maneira:
+     * int[] array[] = new int [10][13];
+
+- Orientação a Objetos
+* Coesão:
+    * As classes devem ter alta coesão (foco), ou seja, cada classe deve ser destinada a uma única responsabilidade para que seja possível reaproveitá-la posteriormente
+
+- Método
+* Quando o método recebe um array não é possível passar como parâmetro o array dessa forma obj.metodo({1,2,3}), deve ser dessa forma obj.metodo(new int[]{1,2,3}).
+* Toda passagem de parâmetros de método do java é por valor, ou seja, quando passamos para um método um objeto por parâmetro o java copiará o valor da referência do objeto para  o parâmetro do método.
+* sempre é chamado o método mais específico a partir da instância chamada. Ex.:
+    public class Pessoa {
+
+        private String nome;
+
+        public Pessoa(String nome) {
+          this.setNome(nome);
+        }
+
+        public void setNome(String nome) {
+          this.nome = nome;
+        }
+        
+       public void getNome() {
+          return this.nome;
+        }
+        
+    }
+    
+    public classs Funcionario extends Pessoa {
+    
+        public Pessoa(String nome) {
+          super(nome);
+        }
+        
+        public void setNome(String nome) {
+          System.out.println("ha ha ha");
+        }
+        
+    }
+    
+    public class Main() {
+    
+        public static void main(String...args) {
+        
+           // abaixo, chama o setNome de Funcionario no construtor da classe Pessoa
+           // pois, apesar do setNome ser chamado no construtor da classe Pessoa, 
+           // é chamado o setNome do objeto cujo qual está instanciado
+           // sendo assim após passar nessa linha o atributo nome não será valorado 
+           // ao invés disso, irá ser printado "ha ha ha", pois está no setNome
+           // de Funcionario
+           Funcionario f = new Funcionario("teste");
+
+           // como nome não foi valorado, será impresso o valor null
+           System.out.println(f.getNome());   // printa null
+           
+        }
+        
+    }
+
+
+- Modificadores de Acesso
+* Não é possível colocar private em classes, a não ser em classes criadas dentro de outras classes
+* a ordem dos modificadores não importa antes do class e antes do return do método
+* não pode ser utilizado o modificador abstract junto com o modificador final, da erro de compilação
+* Não é possível utilizar os modificadores private e abstract juntos, não compila
+* Não é possível utilizar os modificadores static e abstract juntos, não compila
+* o modificador private não pode ser utilizado em classes, a não ser que sejam classes internas
+
+- Objeto This
+* Se um método receber um parâmetro com o mesmo nome de um atributo de classe e não há referências para o atributo com o comando "this", não da erro de compilação e nem de execução, apenas não será alterado o atributo da classe, apenas os parâmetros
+
+- Sobrecarga
+* Para um método poder ter o mesmo nome é necessário que ele tenha parâmetros diferentes. O tipo do retorno não é levado em consideração. Ou seja, o valor de retorno não faz parte da assinatura de um método, apenas o nome do método e os tipos dos parâmetros.
+* Na escolha do método, caso o tipo não bata, a primeira alternativa do compilador é tentar fazer a promoção de automática (cast implicito):
+   * byte->short->int->long->float->double
+   * char->int->long->float->double
+* Se no cast implícito for encontrado 2 métodos, ele da o erro de compilação de método ambiguous.
+* O método sobrecarregado com o varargs sempre é a última opção a ser escolhida pelo compilador
+
+- Blocos de inicialização
+* Sempre são executados antes do construtor
+
+- New
+* Ordem de inicialização do objeto:
+  1) Aloca espaço em memória
+  2) Inicializa os atributos
+  3) Executa o bloco de inicialização
+  4) Executa o construtor
+
+- Garbage Collector
+* Os objetos ficam elegíveis para o garbage collector quando eles perdem a referência
+
+- Static
+* Os atributos static ficam no espaço PermGem space
+* Os métodos, independentemente se são static ou não também  ficam na PermGem space
+
+- Bloco Static
+* O bloco static roda depois da inicialização dos valores da variável
+* Os blocos de inicialização static não podem lançar exceções checked
+* Na herança, os blocos estáticos da superclasse também são chamados ao instanciar um objeto de uma subclasse 
+
+- Exceções
+* Quando estoura o heap memory o java dispara um OutOfMemoryExcepion
+* Quando estoura o stack memory o java dispara um StackOverflowException
+
+- Super
+* super.atributoDaSuperclasse ou this.atributoDaSuperclasse funcionam, mas não para métodos
+* No construtor, o método super() deve ser chamado assim como o this() n aprimeira linha do construtor 
+
+- Herança
+* construtores não são herdados
+* O construtor da superclasse deve ser chamado quando é instanciada a subclasse, se a superclasse não tiver construtor sem parâmetros a subclasse deve chamar algum dos construtores da superclasse passando os parâmetros.
+* Os blocos estáticos da superclasse também são chamados ao instanciar um objeto de uma subclasse
+
+- Sobrescrita de métodos
+* Quando sobrescrevemos um método o tipo de retorno deve ser covariante, senão da erro de compilação 
+* Somente a subclasse consegue chamar o método da sua superclasse
+* O método sobrescrito deve ter o mesmo modificador de acesso ou um menos restritivo, a seguir a ordem do menos para o mais restritivo:
+  1. private
+  2. protected
+  3. package default
+  4. public
+* primeiro o compilador bate o nome e os parâmetros (assinatura), se for igual é uma sobrescrita. Em sendo uma sobrescrita são avaliados os outros atributos do método para ver se é uma sobrescrita válida, são as seguintes:
+ 1. tipo de retorno igual ou covariante
+ 2. modificador de acesso igual ou covariante
+ 3. ambos devem ser static ou ambos não devem ser static
+ 4. tipo de exceção igual ou covariante
+* A superclasse limita as exceções que poderão ser lançadas no método sobrescrito pela subclasse. Sendo assim, a subclasse:
+   1) Pode ter menos exceções (checked) que o método sobrescrito;
+   2) Não pode ter exceções (checked) hierarquicamente diferentes das exceções que estão declaradas do método na superclasse
+   3) Pode ter exceções (checked) mais específicas (filhas) das exceções declaradas do método na superclasse
+   4)  Pode exceções (unchecked)  hierarquicamente diferentes das exceções que estão declaradas do método na superclasse
+
+- Modificador Final
+* Só é possível atribuir valores aos atributos final em 2 lugares:
+  1. Na declaração do atributo final
+  2. No construtor da classe que tenha o atributo final
+
+- Enum
+* Criado a partir do Java 1.5
+* Da erro de compilação quando alguma classe tenta extender de java.lang.Enum<T>
+* O construtor do Enum deve ser private isso pode estar explicito no código ou, se não for colocado, fica implicito. Qualquer outro modificador que é colocado da erro de compilação
+* Enums podem implementar interfaces, mas não podem herdar outros enums ou outras classes;
+
+- Abstract
+* Classes abstratas podem ser herdadas, não obrigando a implementação de métodos abstratos da superclasse, mas a primeira classe concreta deverá sobrescrever os métodos abstratos
+* não pode ser utilizado o  modificador abstract junto com o modificador final, da erro de compilação
+* quando há um método abstrato a classe deve ser abstrata também
+* Não é possível utilizar os modificadores private e abstract juntos, não compila
+* Não é possível utilizar os modificadores static e abstract juntos, não compila
+
+- Interface
+* todos os atributos de uma interface são constantes (public, abstratic e final)
+* todos os métodos de uma interface são public e abstratic
+* existe herança múltipla entre interfaces
+* o modificador de uma constante de uma interface não pode ser private e nem protected, senão não compila
+* os métodos da classe que implementa uma interface que representam os métodos da interface devem ser public senão não compila
+
+- Polimorfismo
+* Regras de cast entre classes:
+   1 ) Regra do É-UM: Não precisa de cast, nunca dará erro
+   2) Regra do PODE-SER-UM: Precisa de cast, pode dar erro de execução
+   3) Regra do NUNCA-SERÁ-UM: Erro de compilação
+   
+   Ex:
+        class Pessoa { }
+        
+        class Funcionario extends Pessoa { }
+        class Gerente extends Funcionario { }
+        
+        class Cliente extends  Pessoa { }
+        
+        class Main {
+          
+           public static void main(String... args) {
+                 
+                 Pessoa pessoa = new Pessoa();
+                 Funcionario func = new Funcionario();   
+                 Cliente cli = new Cliente();
+                 
+                 // Não precisa de cast, pois
+                 // Todo Cliente É UMa Pessoa
+                 // Nunca dará erro
+                 pessoa = cli; 
+                 
+                 // Não precisa de cast, pois
+                 // Todo Fuicionario É UMa Pessoa
+                 // Nunca dará erro
+                 pessoa = func;
+
+                 // precisa de cast, pois
+                 //  Toda Pessoa PODE-SER-UM Funcionario
+                 // pode dar erro de execução caso não for (ClassCastException)
+                 func = (Funcionario) pessoa;
+
+                 // Não precisa de cast, pois
+                 //  Todo Cliente NUNCA-SERÁ-UM Funcionario
+                 // da erro de compilação caso não for
+                 func = (Funcionario) cli;
+
+           }
+          
+        }
+        
+- Retorno Covariante
+* a partir do java 5
+* São os tipos que passam no teste do É-UM citado acima no tópico Polimorfismo
+
+- Pacotes
+* O ideal é sempre compilar e executar a partir da raiz do projeto
+* Na hora de executar sempre deve ser passado no nome da classe com o pacote, senão o JRE não conseguirá encontrar o ".class" dentro do pacote
+* A raiz do projeto é sempre o local onde está configurado na variável CLASSPATH, se o CLASSPATH for configurado com ".", então a raiz do projeto será onde for executado comando "java" , ou seja, se o comando "java" for executado a partir de um diretório "C:/ proj/br/com/globalcode" a raiz do projeto se tornará o diretório "globalcode" e os pacotes serão procurados a partir do diretório "globalcode". Nesse caso o correto é executar a partir do diretório "c:/proj".
+* Contudo, se o CLASSPATH for configurado para a raiz do projeto, a compilação poderá ser rodada a partir de qualquer diretório dentro do diretório apontado no CLASSPATH
+* Se o CLASSPATH estiver em uma estrutura de pastas diferente do local onde for executado o comando "java", o JRE não encontrará o ".class".
+* O comando "java" é executado a partir do que está configurado no "CLASSPATH"
+* O caractere "." pode ser inserido no CLASSPATH e isso significa que a raiz do projeto é o local onde o comando "java" é executado
+* "-cp" ou "-classpath" são a mesma coisa
+
+- Import e Import Static
+* O import ou o import static explícito prevalecerá sobre o import ou o import static com o "*", se 2 pacotes tiverem classes com o mesmo nome, basta utilizar o importou o import static  explícito que ele prevalecerá.
+
+- JAR (Componentes)
+* Existem dois tipos de componentes JAR, um conjunto de classes (API, LIB)  ou um JAR executável
+* O comando "jar" serve para empacotar ou desempacotar um conjunto de classes e pacotes em um arquivo ".jar"
+
+- Exceções
+* Saber as Exceptions que extendem de RuntimeException é interessante para avaliar as questões da certificação que compilam ou não compilam, ou seja, se na questão não houver como disparar uma RuntimeException é porquê provavelmente é um erro de compilação (dá maior segurança na prova).
+* Todas as exceções que não extendem de RuntimeException devem ser tratadas, mesmo se a exceção for disparada da seguinte forma "throw new Exception()"
+* Não é possível tratar Exceções que nunca serão disparadas, da erro de compilação
+* Error não é CheckedException, não precisa ser tratado no "try/catch"!!!!!!!
+
+- Finally
+* Esse bloco sempre é executado, se há ou não exceção e havendo ou não returns
+* se houver um "return" no "finally" não será executado nenhum outro "return" ou nenhum outro "throw" contido no "try" ou no "catch"
+
+- Assert
+* Caso a condição do assert seja falsa a JVM disparará um AssertionError que abortará o processo da aplicação
+* Pode ser desabilitado e habilitado... é para ser habilitado em não-produção e desabilitado em produção
+* Pode ser utilizado apenas a partir do java 1.4

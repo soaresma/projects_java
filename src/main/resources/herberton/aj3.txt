@@ -1,0 +1,392 @@
+- Classes Wrapper
+* Todas as classes wrapper numéricas extendem de java.langNumber e possuem os seguintes métodos:
+  * byte byteValue()
+  * short shortValue()
+  * int intValue()
+  * long longValue()
+  * float floatValue()
+  * double doubleValue()
+* Esses métodos acima estão presentes em todas as classes wrapper que herdam de Number
+* As classes wrapper possuem um construtor que, além de aceitar o tipo 
+primitivo compatível com o wrapper, aceitam uma String e a classe 
+wrapper tenta fazer a conversão, se não conseguir gera erro de execução.
+ Apenas o tipo do wrapper e do String, dos demais não. Ex.: 
+  *  new Byte(1)  // não existe, po isso não compila
+  *  new Byte((byte)1) // existe, sempre compilará e nunca dará erro de execução, pois por conta do cast explícito se o número não estiver no range, o java apenas considerará os bits que estão no range
+  *  new Byte("1") // existe e sempre compila, mas pode dar erro de execução se o texto não estiver dentro do range (de -128 até 127)
+
+  *  new Long(1)  // não existe, mas compila, pois converte para long em cast implícito
+  *  new Long(1L) // existe
+  *  new Long("1L") // existe, mas não compila
+  
+  *  new Float(0.1)  // não existe e não compila
+  *  new Float(0.1f) // existe
+  *  new Float("0.1f") // existe e sempre compila, mas pode dar erro de execução se o texto não estiver dentro do range
+  
+  *  new Double(0.1f)  // não existe, mas compila, pois converte para long em cast 
+  *  new Double(0.1) // existe
+  *  new Double(0.1d) // existe
+  *  new Double("0.1") // existe e sempre compila, mas pode dar erro de execução se o texto não estiver dentro do range
+  *  new Double("0.1d") // existe e sempre compila, mas pode dar erro de execução se o texto não estiver dentro do range
+
+
+* As classes wrapper são imutáveis, não é possível alterar um value de uma classe  wrapper
+* Toda classe wrapper implementa Serializeble e Comparable
+
+
+- Classes Wrapper - Boolean
+* No construtor pode ser passado uma String no modo case insensitive, ou 
+seja, se a chamada for new Boolean("trUe") o valor desse wrapper será 
+true
+* se o construtor for new Boolean("qualquer outro texto"), o valor desse wrapper será false
+* Boolean.TRUE e Boolean.FALSE são constantes da classe Boolean, são instâncias de Boolean
+
+- Classes Wrapper - Character
+* possui alguns métodos úteis como:
+  * boolean isLetter(char)
+  * boolean isDigit(char)
+  * boolean isLetterOrDigit(char)
+  * boolean isLowerCase(char)
+  * boolean isUppperCase(char)
+  * char toUppperCase(char)
+  * char toLowerCase(char)
+
+
+- Autoboxing / Autounboxing
+* A partir do java 5 os seguintes códigos compilam:
+  * Integer i = 10; // Integer i = new Integer(10);
+  * Object o = 10; // Object o = new Integer(10);
+  * int j = i; // int j = i.intValue();
+
+* isso causa NullPointerException:
+
+  public static int soma(int i, int j) {
+        return i+j;
+  }
+
+ public static void main(String... args) {
+    Integer x = null;
+    Integer y = 10;
+
+     // aqui da null pointer exception
+    soma(x, y); // soma(x.intValue(), y.intValue());
+ }
+ 
+* isso não compila porque não há hierarquia entre wrappers:
+
+  // aqui não compila
+  Long l = 10; // Long l = new Integer(10);
+  Integer j = 10.0f; // Integer j = new Long(10.0f);
+
+* isso aqui gera NullPointerException porquê x não é inicializado como zero e sim como null:
+
+public class Teste {
+   static Integer x;
+
+   static void geraExcecao(int z) {
+      int z2 = 5;
+      System.out.println(z2-z);
+   }
+
+  public static void main(String... args) {
+     geraExcecao(x);
+  }
+
+}
+
+- String
+* os principais métodos são:
+  * char charAt(int)
+  * String concat(String)
+  * boolean equals(String)
+  * boolean equalsIgnoreCase(String)
+  * int indexOf(String)
+  * int lastIndexOf(String)
+  * int length()
+  * String replace(char, char)
+  * boolean startsWith(String)
+  * boolean endsWith(String)
+  * String substring(int, int)
+  * String toLowerCase()
+  * String toUpperCase()
+  * String trim()
+  * int compareTo(String)
+* todas as Strings também são imutáveis por conta do pool de Strings, 
+cada operação feita com Strings é gerada uma nova String que é o 
+resultado dessa operação
+* a não ser que seja utilizado o new String(String) o pool não será utilizado. Ex.:
+
+   String nome1 = "teste"; // utiliza o pool
+   String nome2 = "teste"; // utiliza o pool
+   System.out.println(nome1 == nome2); // printará true
+   String nome3 = new String("teste"); // não utiliza o pool
+   System.out.println(nome1 == nome3); // printará false
+
+* só é utilizado o pool de Strings se for uma declaração literal
+
+- java.lang.StringBuilder e java.lang.StringBuffer
+* A principal diferença é que StringBuffer é uma classe thread-safe e StringBuilder não é thread-safe
+
+
+- java.util.Date
+* os métodos a seguir estão depreciados:
+  * int getYear()
+  * void setYear(int)
+  * int getMonth()
+  * void setMonth(int)
+  * int getDay()
+  * int getHours()
+  * void setHours(int)
+  * int getMinutes()
+  * void setMinutes(int)
+  * int getSeconds()
+  * void setSeconds(int)
+
+- java.util.Calendar
+* O Calendar é abstrato, não possui um construtor, mas o mesmo possui um
+ método estático chamado getInstance() que retorna uma instância do tipo
+ do calendário padrão do SO onde a JVM está instalado, no caso dos PCs 
+ocidentais será uma instância de java.util.GregorianCalendar
+* Os principais métodos de Calendar são os seguintes:
+  * Date getTime()
+  * int get(int) 
+  * void set(int, int)
+  * void add(int, int)
+  * void roll(int, int)
+
+* O primeiro parâmetro dos métodos int get(int), void set(int, int), void
+ add(int, int) e void roll(int, int) são utilizados com as seguintes 
+constantes de Calendar:
+  * Calendar.YEAR
+  * Calendar.MONTH
+  * Calendar.DAY
+  * Calendar.WEEK_OF_YEAR
+  * Calendar.WEEK_OF_MONTH
+  * Calendar.DATE
+  * Calendar.DAY_OF_MONTH
+  * Calendar.DAY_OF_WEEK
+  * Calendar.DAY_OF_YEAR
+  * Calendar.HOUR_OF_DAY
+  * Calendar.MINUTE
+  * Calendar.SECOND
+  * Calendar.MILISECOND
+
+- java.text.SimpleDateFormat
+* Recebe no construtor uma string que contém o formato da data (Ex.: dd/MM/yyyy) e utiliza o método String format(Date date). Ex.:
+ 
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    System.out.println(sdf.format(new Date())); // imprimirá a data atual. Ex.: 15/10/2015
+ 
+ * Utiliza o método Date parse(String) para transformar uma String que possua uma data no formato passado no construtor (ex.: dd/MM/yyyy) em um objeto Date. Ex.:
+ 
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    Date date = sdf.parse("15/10/2015"); // Criará um Date com essa data que está na String
+ 
+- java.util.Locale (I18N)
+* Utilizada para representar um local. Com o SimpleDateFormat, é possível alterar a formatação de acordo com o local. Ex.:
+  
+  Locale locale = Locale.US;
+  SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMMM dd", locale);
+  System.out.println(sdf.format(new Date())); // imprimirá a data atual. Ex.: Thursday January 21
+
+- java.text.DateFormat
+* principais métodos:
+   * DateFormat getInstance();
+   * DateFormat getDateInstance();
+   * DateFormat getDateInstance(int);
+   * DateFormat getDateInstance(int, Locale);
+* O primeiro parâmetro dos métodos DateFormat getDateInstance(int) e DateFormat getDateInstance(int, Locale) é o int style que é uma das seguintes constantes da classe DateFormat:
+   * DateFormat.SHORT
+   * DateFormat.MEDIUM
+   * DateFormat.LONG
+   * DateFormat.FULL
+* e pode ser chamado da seguinte maneira:
+   Locale locale = Locale.US;
+   DateFormat df = DateFormat.getInstance(DateFormat.LONG, locale);
+   System.out.println(df.format(new Date())); // imprimirá o texto 15 de Outubro de 2015
+
+- java.text.NumberFormat
+* principais métodos
+  * NumberFormat getInstance()
+  * NumberFormat getNumberInstance()
+  * NumberFormat getNumberInstance(Locale)
+  * NumberFormat getCurrencyInstance()
+  * NumberFormat getCurrencyInstance(Locale)
+  * NumberFormat getPercentInstance()
+  * NumberFormat getPercentInstance(Locale)
+  * void setMinimumFractionDigit(int)
+  * void setMaximumFractionDigit(int)
+  * String format(long)
+  * String format(double)
+  * Number parse(String)
+
+- System.out.printf(String, Object...)
+* recebe uma string com caracteres especiais de formatação no meio do texto e esses caracteres são substituídos pelos valores do segundo parâmetro (varargs). Ex.:
+  String nome = "Jose da Silva";
+  double pagamento = 6500;
+  Date data = new Date();
+  System.out.printf("%s recebeu  R$ %.2f no dia %td/%<tm/%<tY", nome, pagamento, data); // imprimirá Jose da Silva recebeu R$ 6500,00 no dia 15/10/2015
+
+
+- REGEX
+* as classes que implementam REGEX no java são java.util.regex.Pattern e java.util.regex.Matcher
+
+   * principais métodos de java.util.regex.Pattern
+      * static Pattern compile(String regex)
+      * Matcher matcher(CharSequence texto)
+      * static boolean matches(String regex, CharSequence texto)
+
+   * principais métodos de java.util.regex.Matcher
+      * boolean matches()
+      * boolean find()
+      * String group()
+      * int start()
+
+   * exemplo 1
+      String texto = "O 2o cikicadi chegou as 11h26m33s";
+      Pattern padrao = Pattern.compile("\\d");
+      Matcher matches = padrao.matcher(texto);
+      while(matches.find()) {
+          System.out.println("Valor Encontrado: " + matches.group() + " posicao: " + matches.start());
+
+
+   * exemplo 2
+      String texto = "230.283.488-70";
+      boolean b1 = Pattern.matches("(\\d{3}\\.?){2}\\d{3}-?\\d{2}", texto);
+      System.out.println("Valido? " + b1);
+      
+      Pattern padrao = Pattern.compile("(\\d{3}\\.?){2}\\d{3}-?\\d{2}");
+      Matcher matcher = padrao.matcher(texto);
+      b1 = matcher.matches();
+      
+      System.out.println("Valido? " + b1);
+
+- Equals
+* É necessário utilizar o this.getClass().equals(other.getClass()), porquê o instanceof dá problema em herança      
+
+
+- TreeSet
+* Para criar um TreeSet é necessário definir o Comparable. Senão da erro de compilação ao adicionar um item na lista. Ex.:
+       Collection col = new TreeSet();
+       Pessoa p1 = new Pessoa();
+       col.add(p1); // da erro aqui, não daria se a classe pessoa implementasse a interface Comparable ou se fosse definido uma classe que implementa Comparator no TreeSet
+* No método int compare(Object o1, Object o2) da classe Comparator, o segundo parâmetro sempre será o atributo que será adicionado, ou seja, sempre será fixo, enquanto o primeiro atributo sempre será diferente, pois será o nó da árvore que está sendo comparado
+
+
+- Queue
+* Object remove(), retorna Exceção se não tiver ninguém na lista
+* Object element(), retorna Exceção se não tiver ninguém na lista
+
+
+- Map
+* Só posso ter apenas uma chave nula
+* É disparada uma exceção ao tentar remover um elemento que não está na lista
+
+
+- JDBC
+* Para criar conexão:
+   * Driver - Interface
+   * DriverManager - Classe
+   * Connection - Interface
+* Para enviar comandos SQL ao SGBD
+   * Statement - Interface (para executar sql)
+   * PreparedStatement - Interface (para executar sql)
+   * CallableStatement - Interface (para executar procedures)
+* Para receber os resultados das buscas
+   * ResultSet - Interface
+*Para obter meta-dados do banco de dados, de tabelas, de colunas ou de consultas
+   * DatabaseMetaData - Interface
+   * ResultSetMetaData - Interface
+ 
+
+- JDBC - Para abrir uma conexão
+* 2 passos:
+   * 1) Carregar uma classe: 
+      * Class.forName(NOME_DO_DRIVER);
+   * 2) Abrir a conexão:
+      * Connection conn =
+            DriverManager.getConnection(URL_DA_CONEXAO, USUARIO, SENHA); // pode gerar SQLException, deve estar dentro do try/catch
+            DriverManager.getConnection(URL_DA_CONEXAO); // pode gerar SQLException, deve estar dentro do try/catch
+* Erros comuns: não adicionar o jar do driver no classpath (java -cp driver teste.jar)
+
+- JDBC - Connection
+* Métodos:
+   * DatabaseMetaData getMetaData() - para obter metadata
+   * setAutoCommit(boolean val) - para setar o autocommit nas transações dessa conexão
+   * commit() - para commitar
+   * rollback() - para dar rollback
+   * isClosed() - para verificar se a conexão está fechada (a partir do java7 funciona com o tryWithResources)
+   * close() - para fechar a conexão (a partir do java7 funciona com o tryWithResources)
+
+- JDBC - Statement
+* Métodos:
+   * ResultSet executeQuery(String sql) - para consultas
+   * int executeUpdate(String sql) - para executar comandos que não retornam tabelas
+   * void close() - fechar 
+   * ResultSet getGeneratedKeys() - retorna o ID gerado por um insert
+ 
+- JDBC - ResultSet
+* Trabalha conectado no banco, cada vez que é executada uma query ele cria um ponteiro para os itens filtrados e cada vez que é chamado o método "next()" vai no banco, lê o registro da vez e traz o registro lido para o java.
+* Métodos:
+  * boolean next() - para obter o próximo registro do resultado da query
+  * ResultSetMetaData getMetaData() obter metadata sobre o resultado da query
+  * get<<tipo>>(String columnName) ou get<<tipo>>(int pos) - para obter os dados do registro a pontado
+  * close() - fecha o resultSet
+ 
+- JDBC - PreparedStatement
+* métodos: 
+   * ResultSet executeQuery() - para executar a query passada na criação do preparedStatement
+   * int executeUpdate() - para executar a instrução passada na criação do preparedStatement
+   * ResultSetMetaData getMetaData() - obtem o metadata da consulta
+   * void set<<tipo>>(int parameterIndex, <<tipo>> value)
+   * void clearParameters()
+   * ResultSet getGeneratedKeys() - retorna o ID gerado por um insert
+
+* como ciar oPpreparedStatement:
+   * Connection conn = DriverManager.getConnection();
+     PreparedStatement ps = conn.prepareStatement("SELECT * FROM clientes WHERE id = ?");
+
+- JDBC - RowSet
+* uma implementação para trabalhar desconectado do banco
+* Métodos:
+  * void setUrl(String url); 
+  * void setUsername(String username); 
+  * void setPassword(String password);
+  * void setCommand(String command);
+  * void execute(); - executa a query e carrega os dados no próprio RowSet
+* para instanciar um RowSet:
+   * RowSetFactory factory = RowSetProvider.newFactory();
+      RowSet rowSet = factory.createJdbcRowSet();
+      // usa o rowSet
+      factory.close();
+      
+- Generics
+* causa erro de compilação se o tipo não bater com o tipo parametrizado no generics
+* Não existe polimorfismo entre os tipos.
+  * Ex1.:
+     *  List<String> strings = new ArrayList<>();
+     *  List<Object> objects = strings; //não compila, o tipo deve bater
+  * Ex2.:
+    *   Collection<String> strings = new ArrayList<>();
+    *   imprimir(strings); // da erro de compulação
+    *   
+    *   public void imprimir(Collection<Object> objects) { out.println(objects.size()); }
+  * Para o Ex2 funcionar o código deve ser o seguinte:
+    *   Collection<String> strings = new ArrayList<>();
+    *   imprimir(strings); // funciona
+    *   
+    *   public void imprimir(Collection<?> objects) { out.println(objects.size()); } // o compilador não deixa adicionar na lista quando está usando o wildcard '?'
+ * Esse código também bloqueia a adição na lista:
+    * public void imprimir(Collection<? extends Serializable> objects) { 
+out.println(objects.size()); } // o compilador não deixa adicionar na 
+lista quando está usando o wildcard ?
+
+- Generics - extends/super
+* quando é utilizado <? extends Number> ou <? super de Number> :
+   * é compatível com <Number>
+ * para Collection<?> ou Collection<? extends Number>:
+   * não é possível add(), não compila
+   * é possível usar o método get() perfeitamente
+ * para Collection<? super Number>:
+   * é possível usar o método add() 
+   * não é possível get(), não compila
